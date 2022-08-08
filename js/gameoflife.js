@@ -58,23 +58,22 @@ const getNeighborsOf = ([x, y]) => {
 };
 
 const getLivingNeighbors = (cell, state) => {
-  let livingNeighbors = [];
-  getNeighborsOf(cell).forEach(neighbor => {
-    if (contains.call(state, neighbor)) {
-      livingNeighbors.push(neighbor);
-    }
-  })
-  return livingNeighbors;
+  return getNeighborsOf(cell).filter(n => contains.bind(state)(n));
 };
 
 const willBeAlive = (cell, state) => {
   const livingNeighbors = getLivingNeighbors(cell, state);
-  return (livingNeighbors.length === 3 || (contains.call(state, cell) && livingNeighbors === 2));
+
+  return (
+    livingNeighbors.length === 3 ||
+    (contains.call(state, cell) && livingNeighbors.length === 2)
+  );
 };
 
 const calculateNext = (state) => {
   let nextState = []
-  const { bottomLeft, topRight } = corners(state);
+  const bottomLeft = corners(state)['bottomLeft'];
+  const topRight = corners(state)['topRight'];
   for (let y = topRight[1] + 1; y >= bottomLeft[1] -1; y--) {
     for (let x = bottomLeft[0] - 1; x <= topRight[0] + 1; x++) {
       if (willBeAlive([x, y], state)) {
@@ -85,7 +84,16 @@ const calculateNext = (state) => {
   return nextState;
 };
 
-const iterate = (state, iterations) => {};
+const iterate = (state, iterations) => {
+  let gameStates = [state];
+  let nextState = state;
+  do {
+    nextState = calculateNext(nextState);
+    gameStates.push(nextState);
+    iterations--;
+  } while (iterations > 0);
+  return gameStates;
+};
 
 const main = (pattern, iterations) => {};
 
