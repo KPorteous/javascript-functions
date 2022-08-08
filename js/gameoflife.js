@@ -72,8 +72,7 @@ const willBeAlive = (cell, state) => {
 
 const calculateNext = (state) => {
   let nextState = []
-  const bottomLeft = corners(state)['bottomLeft'];
-  const topRight = corners(state)['topRight'];
+  const { topRight, bottomLeft } = corners(state);
   for (let y = topRight[1] + 1; y >= bottomLeft[1] -1; y--) {
     for (let x = bottomLeft[0] - 1; x <= topRight[0] + 1; x++) {
       if (willBeAlive([x, y], state)) {
@@ -95,7 +94,12 @@ const iterate = (state, iterations) => {
   return gameStates;
 };
 
-const main = (pattern, iterations) => {};
+const main = (pattern, iterations) => {
+  const gameStages = iterate(pattern, iterations);
+  gameStages.forEach(state => {
+    console.log(printCells(state) + '\n');
+  });
+};
 
 const startPatterns = {
     rpentomino: [
