@@ -29,13 +29,12 @@ const corners = (state = []) => {
   if (state.length === 0) {
     return {topRight: [0, 0], bottomLeft: [0, 0]};
   };
-  let x = [];
-  let y = [];
-  state.forEach(value => {
-    x.push(value[0]);
-    y.push(value[1]);
-  });
-  return {topRight: [Math.max(...x), Math.max(...y)], bottomLeft: [Math.min(...x), Math.min(...y)]};
+  const xs = state.map(([x, _]) => x);
+  const ys = state.map(([_, y]) => y);
+  return {
+    topRight: [Math.max(...xs), Math.max(...ys)],
+    bottomLeft: [Math.min(...xs), Math.min(...ys)]
+  };
 };
 
 const printCells = (state) => {
@@ -95,7 +94,7 @@ const iterate = (state, iterations) => {
 };
 
 const main = (pattern, iterations) => {
-  const gameStages = iterate(pattern, iterations);
+  const gameStages = iterate(startPatterns[pattern], iterations);
   gameStages.forEach(state => {
     console.log(printCells(state) + '\n');
   });
